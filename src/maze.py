@@ -1,6 +1,7 @@
 from cell import Cell
 from point import Point
 import time
+import random
 
 class Maze:
     """A maze builder
@@ -13,7 +14,8 @@ class Maze:
         num_rows,
         num_cols,
         cell_size,
-        master=None
+        master=None,
+        seed=None
     ):
         self._cells = []
         self._start_point = start_point
@@ -22,8 +24,12 @@ class Maze:
         self._cell_size = cell_size
         self._master = master
 
+        if seed is not None:
+            random.seed(seed)
+
         self._create_cells()
         self._break_entrance_and_exit()
+        self._break_walls_r(0, 0)
 
     def _create_cells(self):
         # Nothing here really prevents us from generating cells outside the master's view
@@ -56,6 +62,52 @@ class Maze:
         self._cells[self._num_cols - 1][self._num_rows - 1].walls["S"] = False
         self._draw_cell(self._num_cols - 1, self._num_rows - 1)
 
+    def _break_walls_r(self, i, j):
+        self._cells[i][j].visited = True
+
+        while True:
+            next_index_list = []
+
+            # east
+            if i > 0 and not self._cells[i - 1][j].visited:
+                next_index_list.append((i - 1, j))
+            # west
+            if i < self._num_cols - 1 and not self._cells[i + 1][j].visited:
+                next_index_list.append((i + 1, j))
+            # north
+            if j > 0 and not self._cells[i][j - 1].visited:
+                next_index_list.append((i, j - 1))
+            # south
+            if j < self._num_rows - 1 and not self._cells[i][j + 1].visited:
+                next_index_list.append((i, j + 1))
+
+            # if there is nowhere to go from here, just break out
+            if len(next_index_list) == 0:
+                self._draw_cell(i, j)
+                return
+
+            direction_index = random.randrange(len(next_index_list))
+            next_index = next_index_list[direction_index]
+
+            # east
+            if next_index[0] == i + 1:
+                self._cells[i][j].walls["E"] = False
+                self._cells[i + 1][j].walls["W"] = False
+            # west
+            if next_index[0] == i - 1:
+                self._cells[i][j].walls["W"] = False
+                self._cells[i - 1][j].walls["E"] = False
+            # south
+            if next_index[1] == j + 1:
+                self._cells[i][j].walls["S"] = False
+                self._cells[i][j + 1].walls["N"] = False
+            # north
+            if next_index[1] == j - 1:
+                self._cells[i][j].walls["N"] = False
+                self._cells[i][j - 1].walls["S"] = False
+
+            # recursively visit the next cell
+            self._break_walls_r(next_index[0], next_index[1])
 
     def _animate(self):
         if self._master is None:

@@ -15,6 +15,7 @@ class Cell:
         self._top_left = top_left
         self._bottom_right = bottom_right
         self._master = master
+        self.visited = False
         
     def draw(self, x1=None, y1=None, x2=None, y2=None):
         if x1 and y1 and self._top_left is None:
