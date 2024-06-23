@@ -23,6 +23,7 @@ class Maze:
         self._master = master
 
         self._create_cells()
+        self._break_entrance_and_exit()
 
     def _create_cells(self):
         # Nothing here really prevents us from generating cells outside the master's view
@@ -30,7 +31,7 @@ class Maze:
             col_cells = []
 
             for row in range(self._num_rows):
-                col_cells.append(Cell(self._master))
+                col_cells.append(Cell(master=self._master))
             
             self._cells.append(col_cells)
 
@@ -48,6 +49,12 @@ class Maze:
         y2 = y1 + self._cell_size.y
         self._cells[i][j].draw(x1, y1, x2, y2)
         self._animate()
+         
+    def _break_entrance_and_exit(self):
+        self._cells[0][0].walls["N"] = False
+        self._draw_cell(0, 0)
+        self._cells[self._num_cols - 1][self._num_rows - 1].walls["S"] = False
+        self._draw_cell(self._num_cols - 1, self._num_rows - 1)
 
 
     def _animate(self):
