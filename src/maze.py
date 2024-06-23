@@ -31,6 +31,11 @@ class Maze:
         self._break_entrance_and_exit()
         self._break_walls_r(0, 0)
 
+        # Reset visited to re-use it for traversal from in to exit
+        for cell_col in self._cells:
+            for cell in cell_col:
+                cell.visited = False
+
     def _create_cells(self):
         # Nothing here really prevents us from generating cells outside the master's view
         for col in range(self._num_cols):
