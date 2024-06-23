@@ -119,7 +119,7 @@ class Maze:
             return
 
         self._master.redraw()
-        time.sleep(.2)
+        time.sleep(.05)
 
     def solve(self):
         return self._solve_r(0, 0)
