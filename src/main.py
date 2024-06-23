@@ -4,11 +4,10 @@ from point import Point
 from cell import Cell
 from maze import Maze
 
-win = Window(800, 600)
+win = Window(800, 800)
 
-maze = Maze(Point(0, 0), 30, 60, Point(10, 10), win, 0)
+maze = Maze(Point(0, 0), 45, 45, Point(15, 15), win)
 maze.solve()
 
 win.wait_for_close()
-
 
