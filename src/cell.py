@@ -51,3 +51,16 @@ class Cell:
                 "green"
             )
 
+    def draw_move(self, to_cell, undo=False):
+        color = 'red' if undo == False else 'grey'
+        self_center = Point(
+            (self._top_left.x + self._bottom_right.y) // 2,
+            (self._top_left.y + self._bottom_right.y) // 2
+        )
+        to_cell_center = Point(
+            (to_cell._top_left.x + to_cell._bottom_right.y) // 2,
+            (to_cell._top_left.y + to_cell._bottom_right.y) // 2
+        )
+
+        self._master.draw_line(Line(self_center, to_cell_center), color)
+
